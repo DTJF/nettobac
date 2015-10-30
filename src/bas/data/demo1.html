@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head >
+
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8"/>
+  <title >NetToBac demo start page</title>
+
+</head>
+
+<body>
+
+  <!--
+  Display an image loaded over the internet
+  -->
+  <img src="http://freebasic.net/sites/default/files/horse_original_r_0.gif">
+
+  <!--
+  Show some marked up text
+  -->
+  <b>NetToBac HTML Demo #1</b>
+
+  <!--
+  Display a hyperlink to the next page, requested from the server,
+  containing a fake login.
+  -->
+  <p><a href="demo2.html">Go to Demo #2 </a>
+
+  <!--
+  Display a hyperlink to an external link.
+  -->
+  <p>Show project page.
+  <p><a href="https://github.com/DTJF/girtobac">NetToBac</a>
+
+  <!--
+  Display a button labeled Exit demo. Pressing this button send a GET
+  message to the server named /EXIT!
+
+  When the BASIC program gets this message, it will close the connection
+  an dshut down the server.
+  -->
+  <form id='main' method='get' action='EXIT'>
+
+    <p><input type='submit' name='shutdown' value='Exit demo -> shutdown server'/></p>
+
+  </form>
+</body>
+</html>
