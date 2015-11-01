@@ -1,6 +1,9 @@
 /'* \file example_server.bas
 \brief Example code to test the `bn` package
 
+Copyright (C) GPLv3, see ReadMe.md for details.
+
+\since 0.0
 '/
 
 #INCLUDE ONCE "nettobac.bas"
@@ -14,17 +17,17 @@ DIM SHARED AS STRING _
   , EMSG    '*< the HTTP error message
 
 
-FUNCTION newConn(BYVAL Ser AS bnServer PTR, BYVAL Con AS bnConnection PTR) AS INTEGER
+FUNCTION newConn(BYVAL Ser AS nettobacServer PTR, BYVAL Con AS n2bConnection PTR) AS INTEGER
   ?"client connected"
   RETURN 0
 END FUNCTION
 
-FUNCTION disConn(BYVAL Ser AS bnServer PTR, BYVAL Con AS bnConnection PTR) AS INTEGER
+FUNCTION disConn(BYVAL Ser AS nettobacServer PTR, BYVAL Con AS n2bConnection PTR) AS INTEGER
   ?"client disconnected"
   RETURN 0
 END FUNCTION
 
-FUNCTION newData(BYVAL Con AS bnConnection PTR, BYREF Dat AS STRING) AS INTEGER
+FUNCTION newData(BYVAL Con AS n2bConnection PTR, BYREF Dat AS STRING) AS INTEGER
   ?"message: " & dat
   SELECT CASE LEFT(Dat, 4)
   CASE "GET "
@@ -118,7 +121,7 @@ ELSE
   CLOSE #fnr
 END IF
 
-VAR server = NEW bnServer(3491) ' create web server instance for port 3490
+VAR server = NEW nettobacServer(3491) ' create web server instance for port 3490
 
 WITH *server
   IF .Errr THEN

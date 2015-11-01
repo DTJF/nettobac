@@ -1,13 +1,18 @@
 $ cat .gitignore
 
 # Can ignore specific files
+ReadMe.md
 Makefile
 info.txt
 cmake_install.cmake
 install_manifest.txt
 
 nettobac
+nettobac_text.bi
 nettobac.geany
+src/bas/data/fb_logo.gif
+src/bas/data/index.htm
+src/bas/data/osm.png
 
 
 # Can also ignore all directories and files in a directory.

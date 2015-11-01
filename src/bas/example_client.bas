@@ -1,6 +1,9 @@
-/'* \file example.bas
+/'* \file example_client.bas
 \brief Example code to test `bn` package
 
+Copyright (C) GPLv3, see ReadMe.md for details.
+
+\since 0.0
 '/
 
 #INCLUDE ONCE "nettobac.bas"

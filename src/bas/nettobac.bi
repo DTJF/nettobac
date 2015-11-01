@@ -1,4 +1,4 @@
-/'* \file bn.bi
+/'* \file nettobac.bi
 
 `snc` is a synonym for [S]imple [N]etwork [C]onnection. This file
 contains classes designed to handle network client and server
@@ -33,11 +33,11 @@ Copyright (C) LGPLv2, see bn.md for details.
 
 /'* \brief FIXME
 
-It has to be constructed with a bnServer or a bnClient class. Data can
+It has to be constructed with a nettobacServer or a nettobacClient class. Data can
 get send or received to/from the peer with it.
 
 '/
-TYPE bnConnection
+TYPE n2bConnection
 PUBLIC:
   DECLARE CONSTRUCTOR(BYVAL AS LONG, BYVAL AS ZSTRING PTR PTR)
   DECLARE DESTRUCTOR()
@@ -57,30 +57,30 @@ END TYPE
 
 
 '
-/'* \brief Construct bnConnection pointers
+/'* \brief Construct n2bConnection pointers
 
 This class manages the connection data. It provides the method to open
 connections and collects their pointer in the array Slots.
 
 \since 0.0
 '/
-TYPE bnConnectionFactory EXTENDS OBJECT
+TYPE n2bFactory EXTENDS OBJECT
 PUBLIC:
   AS ZSTRING PTR Errr '*< the common error message (`NULL` in case of no error)
   DECLARE CONSTRUCTOR()
   DECLARE VIRTUAL DESTRUCTOR()
-  DECLARE ABSTRACT FUNCTION OpenSock() AS bnConnection PTR
-  DECLARE FUNCTION CloseSock(BYVAL AS bnConnection ptr) AS zstring ptr
-  REDIM AS bnConnection PTR Slots(-1 TO -1)
+  DECLARE ABSTRACT FUNCTION OpenSock() AS n2bConnection PTR
+  DECLARE FUNCTION CloseSock(BYVAL AS n2bConnection ptr) AS zstring ptr
+  REDIM AS n2bConnection PTR Slots(-1 TO -1)
 PROTECTED:
   AS LONG Sock '*< socket to listen at (server only)
-  DECLARE FUNCTION slot(BYVAL AS LONG) AS bnConnection PTR
+  DECLARE FUNCTION slot(BYVAL AS LONG) AS n2bConnection PTR
 END TYPE
 
 
 /'* \brief The client class
 
-This class creates an instance to act as a client. This is
+Class creating an instance to act as a client. This is
 
 - connecting to a server
 - sending data requests
@@ -88,32 +88,32 @@ This class creates an instance to act as a client. This is
 
 \since 0.0
 '/
-TYPE bnClient EXTENDS bnConnectionFactory
+TYPE nettobacClient EXTENDS n2bFactory
 PUBLIC:
   '* \brief create a client instance to a server, default port is 80
   DECLARE CONSTRUCTOR(BYREF AS STRING, BYVAL AS USHORT = 80)
   '* \brief open a client connection to a server
-  DECLARE VIRTUAL FUNCTION OpenSock() AS bnConnection PTR
+  DECLARE VIRTUAL FUNCTION OpenSock() AS n2bConnection PTR
 END TYPE
 
 
 /'* \brief The server class
 
-This class creates an instance to act as a server. Tjis is
+Class creating an instance to act as a server. This is
 
-- listening at a port
+- listening to a port
 - accepting client connection requests
 - receiving data requests
 - sending data
 
 \since 0.0
 '/
-TYPE bnServer EXTENDS bnConnectionFactory
+TYPE nettobacServer EXTENDS n2bFactory
 PUBLIC:
   '* \brief create a server instance (defaults: port is 80, maximum 64 client connections)
   DECLARE CONSTRUCTOR(BYVAL AS USHORT = 80, BYVAL AS INTEGER = 64)
   '* \brief open the server connection to a connecting client
-  DECLARE VIRTUAL FUNCTION OpenSock() AS bnConnection PTR
+  DECLARE VIRTUAL FUNCTION OpenSock() AS n2bConnection PTR
 PRIVATE:
   AS timeval Timeout  '*< the timeout value to abort slow or impossible transmissions
 END TYPE

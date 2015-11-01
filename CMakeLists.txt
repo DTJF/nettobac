@@ -20,7 +20,7 @@ SET(PROJ_VERS "0.0.0"              CACHE STRING "project version" FORCE)
 SET(PROJ_AUTH "DTJF"               CACHE STRING "project authors" FORCE)
 SET(PROJ_MAIL "Thomas{ doT ]Freiherr[ At ]gmx[ DoT }net"  CACHE STRING "project mail address" FORCE)
 SET(PROJ_WEBS "https://github.com/DTJF/nettobac" CACHE STRING "project website" FORCE)
-SET(PROJ_LICE "lGPLv2.1"           CACHE STRING "project licence" FORCE)
+SET(PROJ_LICE "LGPLv2.1"           CACHE STRING "project licence" FORCE)
 SET(PROJ_YEAR "2015"               CACHE STRING "project year" FORCE)
 
 # declare the project name and the language (compiler) to use
@@ -32,7 +32,7 @@ ADD_SUBDIRECTORY(src/bas)
 
 CONFIGURE_FILE(src/doc/ReadMe.md.in ${CMAKE_SOURCE_DIR}/ReadMe.md @ONLY)
 
-ADD_SUBDIRECTORY(doc)
+ADD_SUBDIRECTORY(doxy)
 
 # declare installation rules
 #INSTALL(DIRECTORY cmake/Modules DESTINATION ${CMAKE_ROOT})

@@ -17,9 +17,10 @@ BAS_SRC
   ../src/bas/example_client.bas
   ../src/bas/example_server.bas
 DEPENDS
+  ../src/doc/ReadMe.md.in
   ../src/doc/_1_Introduction.md
   ../src/doc/_2_Preparation.md
-  ../src/doc/_3_Tutorial.md
+  ../src/doc/_3_Examples.md
   ../src/doc/_z_ChangeLog.md
   ../CMakeLists.txt
   Doxyfile

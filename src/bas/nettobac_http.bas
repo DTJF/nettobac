@@ -1,4 +1,4 @@
-/'* \file bn_http.bas
+/'* \file nettobac_http.bas
 \brief Utility functions to handle http requests
 
 This file contains
@@ -231,7 +231,7 @@ FUNCTION httpLoad(BYREF Res AS STRING, BYREF Adr AS STRING, BYVAL Mim AS MimeTyp
   VAR     p = INSTR(Adr, "/") _
    , server = LEFT(Adr, p - 1) _
      , path = urlEncode(MID(Adr, p)) _
-   , client = NEW bnClient(server, Port) _ ' connect to web server at port (default 80)
+   , client = NEW nettobacClient(server, Port) _ ' connect to web server at port (default 80)
         , r = client->Errr
   IF 0 = r THEN
     VAR conn = client->OpenSock()                     ' get a connection

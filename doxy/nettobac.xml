@@ -7,7 +7,8 @@
     <tab type="usergroup" title="Description">
       <tab type="user" url="@ref PagIntroduction" title="Introduction"/>
       <tab type="user" url="@ref PagPreparation" title="Preparation"/>
-      <tab type="user" url="@ref PagTutorial" title="Tutorial"/>
+      <tab type="user" url="@ref PagExamples" title="Examples"/>
+      <tab type="user" url="@ref PagErrormsg" title="Error Messages"/>
       <tab type="user" url="@ref PagChangelog" title="Changelog"/>
     </tab>
     <tab type="modules" visible="yes" title="" intro=""/>
@@ -17,7 +18,7 @@
     </tab>
     <tab type="classes" visible="yes" title="">
       <tab type="classlist" visible="yes" title="" intro=""/>
-      <tab type="classindex" visible="$ALPHABETICAL_INDEX" title=""/> 
+      <tab type="classindex" visible="$ALPHABETICAL_INDEX" title=""/>
       <tab type="hierarchy" visible="yes" title="" intro=""/>
       <tab type="classmembers" visible="yes" title="" intro=""/>
     </tab>
@@ -25,7 +26,7 @@
       <tab type="filelist" visible="yes" title="" intro=""/>
       <tab type="globals" visible="yes" title="" intro=""/>
     </tab>
-    <tab type="examples" visible="yes" title="" intro=""/>  
+    <tab type="examples" visible="yes" title="" intro=""/>
   </navindex>
 
   <!-- Layout definition for a class page -->

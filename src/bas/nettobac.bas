@@ -1,30 +1,18 @@
-/'* \file bn.bas
+/'* \file nettobac.bas
 
 bn` is a synonym for [b]asic [n]etworking. This file contains classes
 for the low level API, designed to handle network client and server
 connections.
 
-Copyright (C) lGPLv2.1, see ReadMe.md for details.
+Copyright (C) LGPLv2.1, see ReadMe.md for details.
 
 \since 0.0
 '/
 
 
 #INCLUDE ONCE "nettobac.bi"
+
 #IFNDEF __FB_UNIX__
-'#IFDEF __FB_UNIX__
- '#INCLUDE ONCE "crt/unistd.bi"     ' close_ ...
- '#INCLUDE ONCE "crt/netinet/in.bi" ' socket.bi ...
- '#INCLUDE ONCE "crt/sys/select.bi" ' FD_SET ...
- '#INCLUDE ONCE "crt/netdb.bi"      ' hostent ...
- '#INCLUDE ONCE "crt/arpa/inet.bi"  ' inet_ntoa ...
-'#ELSE
- '#INCLUDE ONCE "windows.bi"
- '#INCLUDE ONCE "win/windef.bi"
- '#INCLUDE ONCE "win/winsock2.bi"
- '#IFNDEF opensocket
-  '#DEFINE opensocket socket
- '#ENDIF
 /'* \brief Startup WSA on non-LINUX systems
 
 FIXME
@@ -46,7 +34,6 @@ FIXME
 SUB NetworkExit() DESTRUCTOR 9999
   WSACleanup()
 END SUB
-'#ENDIF ' #IFDEF __FB_UNIX__
 #ENDIF ' #IFNDEF __FB_UNIX__
 
 
@@ -59,7 +46,7 @@ can send and receive messages to/from your peer with it.
 
 \since 0.0
 '/
-CONSTRUCTOR bnConnection(BYVAL Socket AS LONG, BYVAL Ep AS ZSTRING PTR PTR)
+CONSTRUCTOR n2bConnection(BYVAL Socket AS LONG, BYVAL Ep AS ZSTRING PTR PTR)
   Sock = Socket
   Errr = Ep
   IF Sock <> SOCKET_ERROR THEN
@@ -78,7 +65,7 @@ FIXME
 
 \since 0.0
 '/
-DESTRUCTOR bnConnection()
+DESTRUCTOR n2bConnection()
   IF Sock = -1 THEN EXIT DESTRUCTOR
 ?"closesocket(" & Sock & ")"
   closesocket(Sock)
@@ -87,7 +74,6 @@ END DESTRUCTOR
 
 /'* \brief FIXME
 \param Dat FIXME
-\param Az FIXME
 \param ReTry FIXME
 \returns FIXME
 
@@ -98,7 +84,7 @@ FIXME
 
 \since 0.0
 '/
-FUNCTION bnConnection.PutData(BYVAL Dat AS STRING, BYVAL ReTry AS INTEGER = 100) AS INTEGER
+FUNCTION n2bConnection.PutData(BYVAL Dat AS STRING, BYVAL ReTry AS INTEGER = 100) AS INTEGER
   RETURN PutData(SADD(Dat), LEN(Dat), ReTry)
 END FUNCTION
 
@@ -116,7 +102,7 @@ FIXME
 
 \since 0.0
 '/
-FUNCTION bnConnection.PutData(BYVAL Dat AS ANY PTR, BYVAL Az AS INTEGER, BYVAL ReTry AS INTEGER = 100) AS INTEGER
+FUNCTION n2bConnection.PutData(BYVAL Dat AS ANY PTR, BYVAL Az AS INTEGER, BYVAL ReTry AS INTEGER = 100) AS INTEGER
   IF Sock = SOCKET_ERROR THEN        *Errr = @"socket check" : RETURN -1
   IF  Dat = 0 ORELSE Az < 1 THEN   *Errr = @"put data check" : RETURN -1
   FD_ZERO(@FdsW)
@@ -150,7 +136,7 @@ FIXME
 
 \since 0.0
 '/
-FUNCTION bnConnection.GetData(BYREF R AS STRING, BYVAL ReTry AS INTEGER = 100) AS ZSTRING PTR
+FUNCTION n2bConnection.GetData(BYREF R AS STRING, BYVAL ReTry AS INTEGER = 100) AS ZSTRING PTR
   IF Sock < 0 THEN                *Errr = @"socket check" : RETURN *Errr
   CONST size = &h400
   DIM AS STRING*size buf
@@ -182,7 +168,7 @@ and checks the result.
 
 \since 0.0
 '/
-CONSTRUCTOR bnConnectionFactory()
+CONSTRUCTOR n2bFactory()
   Sock = opensocket(AF_INET, SOCK_STREAM, 0)
   IF Sock = SOCKET_ERROR THEN Errr = @"socket check"
 END CONSTRUCTOR
@@ -195,7 +181,7 @@ opened in the constructor.
 
 \since 0.0
 '/
-DESTRUCTOR bnConnectionFactory()
+DESTRUCTOR n2bFactory()
   FOR i AS INTEGER = 0 TO UBOUND(Slots)
     DELETE Slots(i)
 ?"DELETE Connection: " & i, Slots(i)
@@ -215,12 +201,12 @@ called, use method CloseSock().
 
 \since 0.0
 '/
-FUNCTION bnConnectionFactory.slot(BYVAL Socket AS LONG) AS bnConnection PTR
+FUNCTION n2bFactory.slot(BYVAL Socket AS LONG) AS n2bConnection PTR
   IF Socket = SOCKET_ERROR        THEN Errr = @"socket check" : RETURN 0
   VAR u = UBOUND(Slots) + 1
   REDIM PRESERVE Slots(u)
 ?"new slot " & u
-  Slots(u) = NEW bnConnection(Socket, @Errr)           : RETURN Slots(u)
+  Slots(u) = NEW n2bConnection(Socket, @Errr)           : RETURN Slots(u)
 END FUNCTION
 
 
@@ -234,7 +220,7 @@ called.
 
 \since 0.0
 '/
-FUNCTION bnConnectionFactory.CloseSock(BYVAL Con AS bnConnection PTR) AS ZSTRING PTR
+FUNCTION n2bFactory.CloseSock(BYVAL Con AS n2bConnection PTR) AS ZSTRING PTR
   VAR u = UBOUND(Slots)
   FOR i AS INTEGER = 0 TO u
     IF Slots(i) <> Con THEN CONTINUE FOR
@@ -255,7 +241,7 @@ and connect to the destination port.
 
 \since 0.0
 '/
-CONSTRUCTOR bnClient(BYREF Address AS STRING, BYVAL Port AS USHORT = 80)
+CONSTRUCTOR nettobacClient(BYREF Address AS STRING, BYVAL Port AS USHORT = 80)
   BASE()
   IF Sock = SOCKET_ERROR THEN Errr = @"client socket" : EXIT CONSTRUCTOR
   VAR he = gethostbyname(SADD(Address))
@@ -279,12 +265,12 @@ the constructor call. The connection is ready to send
 or receive data.
 
 \note Manualy close the connection by calling method CloseSock(). This
-      is usualy not necessary, since the class bnConnectionFactory will
+      is usualy not necessary, since the class n2bFactory will
       close all remaining connections in its destructor.
 
 \since 0.0
 '/
-VIRTUAL FUNCTION bnClient.OpenSock() AS bnConnection PTR
+VIRTUAL FUNCTION nettobacClient.OpenSock() AS n2bConnection PTR
   RETURN slot(Sock)
 END FUNCTION
 
@@ -299,7 +285,7 @@ listening on the specified port.
 
 \since 0.0
 '/
-CONSTRUCTOR bnServer(BYVAL Port AS USHORT = 80, BYVAL Max AS INTEGER = 64)
+CONSTRUCTOR nettobacServer(BYVAL Port AS USHORT = 80, BYVAL Max AS INTEGER = 64)
   BASE()
   IF Sock = SOCKET_ERROR THEN Errr = @"server socket" : EXIT CONSTRUCTOR
   DIM AS sockaddr_in sadr
@@ -315,18 +301,18 @@ END CONSTRUCTOR
 
 
 /'* \brief Open a connection to a client
-\returns A pointer to a new bnConnection instance (or zero on failure)
+\returns A pointer to a new n2bConnection instance (or zero on failure)
 
 When this function does not return 0 (zero), then a client request a
 connection. This connection gets opened and is ready to send or receive
 data. Close the connection by calling method CloseSock().
 
-\note The class bnConnectionFactory will close all remaining
+\note The class n2bFactory will close all remaining
       connections in its destructor.
 
 \since 0.0
 '/
-VIRTUAL FUNCTION bnServer.OpenSock() AS bnConnection PTR
+VIRTUAL FUNCTION nettobacServer.OpenSock() AS n2bConnection PTR
   DIM AS fd_set readfd
   FD_ZERO(@readfd)
   FD_SET_(Sock, @readfd)

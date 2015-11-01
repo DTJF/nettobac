@@ -1,9 +1,12 @@
-/'* \file girtobac_text.bi
+/'* \file nettobac_text.bi
 \brief Header with informations on the executable and help and version texts
 
 This file contains some informational texts for the user interface,
 namely the version and help texts.
 
+Copyright (C) LGPLv2.1, see ReadMe.md for details.
+
+\since 0.0
 '/
 
 #IFDEF __FB_UNIX__
