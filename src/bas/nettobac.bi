@@ -39,6 +39,7 @@ PROTECTED:
   AS timeval _
     Timeout  '*< how long should we wait until network is ready
 END TYPE
+'& typedef n2bConnection* n2bConnection_PTR;
 
 
 '
