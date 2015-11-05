@@ -8,8 +8,9 @@ cmake_install.cmake
 install_manifest.txt
 
 nettobac
-nettobac_text.bi
+nettobac_system.bi
 nettobac.geany
+doxy/fb-doc.lfn
 src/bas/data/fb_logo.gif
 src/bas/data/index.htm
 src/bas/data/osm.png

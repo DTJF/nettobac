@@ -8,9 +8,9 @@ This file contains
 - functions to create http requests (low level API)
 - a function to download a file (high level API)
 
-Copyright (C) LGPLv2, see ReadMe.md for details.
+Copyright (C) LGPLv2.1, see ReadMe.md for details.
 
-\since 0.0
+\since 0.0.0
 '/
 
 CONST AS STRING _
@@ -34,15 +34,15 @@ ENUM MimeTypes
 END ENUM
 
 
-/'* \brief Create a type STRING
-\param Typ the bitmask containing the type bits (see enumerator MimeTypes)
-\returns the list of mime type (`;` separated)
+/'* \brief Create a text version of the mime type bit mask
+\param Typ the bitmask containing the type bits (see enumerator #MimeTypes)
+\returns the text list of mime types (`;` separated)
 
 Mime types get handled as a bit mask at module level, for better
 readability. This function translate the bit mask in to a STRING
 representation.
 
-\since 0.0
+\since 0.0.0
 '/
 FUNCTION MimeType(BYVAL Typ AS MimeTypes) AS STRING
   VAR r = ""
@@ -63,7 +63,7 @@ FUNCTION MimeType(BYVAL Typ AS MimeTypes) AS STRING
 END FUNCTION
 
 
-/'* \brief Encode an URL text (prepend `%..`)
+/'* \brief Encode an URL text
 \param Url the URL text
 \returns the encoded version of the input
 
@@ -72,22 +72,17 @@ Encode special characters in an URL. Normal characters are
 - A to Z
 - a to z
 - 0 to 9
-- `_` (underscore)
-
-- `&` (ampersant), `,` (comma), `.` (dot), `;` (semicolon), `?` (questionmark),
-- `+` (plus), `-` (minus), `=` (equal)
+- `_` (underscore), `/` (slash)
 
 All other characters get replaced by their `%<hexval>` representation.
 
-\since 0.0
+\since 0.0.0
 '/
 FUNCTION urlEncode(BYREF Url AS STRING) AS STRING
   VAR r = ""
   FOR i AS INTEGER = 0 TO LEN(Url) - 1
     SELECT CASE AS CONST Url[i]
-    'CASE ASC("/"), ASC("&"), ASC(","), ASC("."), ASC(";"), ASC("?") _
-       ', ASC("+"), ASC("-"), ASC("=") _
-    CASE ASC("_") _
+    CASE ASC("_"), ASC("/") _
        , ASC("0") TO ASC("9") _
        , ASC("A") TO ASC("Z") _
        , ASC("a") TO ASC("z") : r += CHR(Url[i])
@@ -97,14 +92,14 @@ FUNCTION urlEncode(BYREF Url AS STRING) AS STRING
 END FUNCTION
 
 
-/'* \brief Decode an URL text (resolve `%..`)
+/'* \brief Decode an URL text
 \param Url the encoded URL text
 \returns the decodeded version of the input
 
 Decode special characters in an URL. The `%<hexval>` representations
 get resolved in to the related characters.
 
-\since 0.0
+\since 0.0.0
 '/
 FUNCTION urlDecode(BYREF Url AS STRING) AS STRING
   Url = TRIM(Url)
@@ -120,45 +115,45 @@ END FUNCTION
 
 /'* \brief Create a HTTP GET request
 \param Host the host adress (ie. `"domain.com"`)
-\param Targ the path to search for (ie. `"/test.jpg"`)
-\param Mime the mime type (ie. `"image/jpg"`)
+\param Targ the path to search for (ie. `"img/test.jpg"`)
+\param Mime the mime type (ie. `MIME_JPG`, see #MimeTypes)
 \returns the complete http request STRING
 
 Requests a representation of the specified resource.
 
-\since 0.0
+\since 0.0.0
 '/
-FUNCTION httpGetReq(BYREF Host AS STRING, BYREF Targ AS STRING, BYREF Mime AS STRING = "") AS STRING
+FUNCTION httpGetReq(BYREF Host AS STRING, BYREF Targ AS STRING, BYVAL Mime AS MimeTypes = MIME_HTM OR MIME_TXT) AS STRING
   VAR r = "GET "   & Targ & " HTTP/1.1" & LINEEND _
         & "Host: " & Host & LINEEND
-  IF LEN(Mime)>0 THEN r &= "Mime: " & Mime & LINEEND
+  IF LEN(Mime) THEN r &= "Mime: " & MimeType(Mime) & LINEEND
   RETURN r & "Connection: close" & HEADEREND
 END FUNCTION
 
 
 /'* \brief Create a HTTP HEAD request
 \param Host the host adress (ie. `"domain.com"`)
-\param Targ the path to search for (ie. `"/test.txt"`)
-\param Mime the mime type (ie. `"text/plain"`)
+\param Targ the path to search for (ie. `"html/index.html"`)
+\param Mime the mime type (ie. `MIME_HTM`, see #MimeTypes)
 \returns the request STRING
 
 Asks for the response identical to the one that would correspond to a
 GET request, but without the response body. It's possible to extract
 the content length and Mime type from it.
 
-\since 0.0
+\since 0.0.0
 '/
-FUNCTION httpHeadReq(BYREF Host AS STRING, BYREF Targ AS STRING, BYREF Mime AS STRING = "") AS STRING
+FUNCTION httpHeadReq(BYREF Host AS STRING, BYREF Targ AS STRING, BYVAL Mime AS MimeTypes = MIME_HTM OR MIME_TXT) AS STRING
   VAR r = "HEAD "  & Targ & " HTTP/1.1" & LINEEND _
-        & "Host: " & Host     & LINEEND
-  IF LEN(Mime) THEN r &= "Mime: " & Mime & LINEEND
+        & "Host: " & Host & LINEEND
+  IF LEN(Mime) THEN r &= "Mime: " & MimeType(Mime) & LINEEND
   RETURN r & "Connection: close" & HEADEREND
 END FUNCTION
 
 
 /'* \brief Create a HTTP POST request
 \param Host the host adress (ie. `"domain.com"`)
-\param Targ the path to search for (ie. `"/script.php"`)
+\param Targ the path to search for (ie. `"data/script.php"`)
 \param Query  (ie. `"key1=value&key2=value"`)
 \param Refer if a `Referer:` should get added
 \returns the request STRING
@@ -166,7 +161,7 @@ END FUNCTION
 Requests that the server accept the entity enclosed in the request as a
 new subordinate of the web resource identified by the URI.
 
-\since 0.0
+\since 0.0.0
 '/
 FUNCTION httpPostReq(BYREF Host AS STRING, BYREF Targ AS STRING, BYREF Query AS STRING, BYVAL Refer AS INTEGER = 1) AS STRING
   VAR r = "POST "  & Targ & " HTTP/1.1" & LINEEND _
@@ -182,13 +177,13 @@ END FUNCTION
 
 /'* \brief Create a HTTP HEAD request
 \param Host the host adress (ie. `"domain.com"`)
-\param Targ the path to search for (ie. `"/test.txt"`)
+\param Targ the path to search for (ie. `"data/test.txt"`)
 \param Content any content (defaults to `""`)
 \returns the request STRING
 
 Requests that the enclosed entity be stored under the supplied URI.
 
-\since 0.0
+\since 0.0.0
 '/
 FUNCTION httpPutReq(BYREF Host AS STRING, BYREF Targ AS STRING, BYREF Content AS STRING = "") AS STRING
   VAR r = "PUT "   & Targ & " HTTP/1.1" & LINEEND _
@@ -200,51 +195,58 @@ END FUNCTION
 /'* \brief load a file over network via http protocol
 \param Res a STRING variable to append the result
 \param Adr the address of the target (ie. `freebasic.net/index.html`)
-\param Mim the mime type (see enumerators MimeTypes)
+\param Mim the mime type (see enumerators #MimeTypes)
 \param Port The port number to use (defaults to 80)
-\param Mo the modus which data the result should contain
+\param Mo the modus which data the result variable `Res` should contain
 \returns the requested file context, if OK
 
-This function loads a file from an http server over the network connection. It tries to
+This function loads a file over a network connection. It tries to
 
-- create a client for the server
+- create a nettobacClient instance to the server adress
 - create a connetion
 - request the target file
 - receive the http reponse
-- check the header
+- check the http header
   - if header OK, strip header and return data only
   - if not OK, return all data unchanged
 
+An error check gets done after each step. In case of an error the
+function breaks and the error text gets returned. Otherwise the return
+value 0 (zero) indicates successful operation.
+
+\note Although the result variable `Res` may contains data, the function
+      can report an error (ie. when the connection gets lost during
+      transfer). It's recommended to check `.Errr` always.
+
 \note By default the http header gets checked and if it includes
-      `200 OK` it gets extracted from the result STRING (only data get
-      returned). In order to receive the header (unchecked) as well,
-      set bit 0 in the modus parameter (`Mo OR= &b1`).
+      `200 OK` it gets extracted from the result variable `Res` (only
+      data get returned). In order to receive the header (unchecked) as
+      well, set bit 0 in the modus parameter (`Mo OR= &b1`).
 
-\note The received data get appended to result. In order to reset the
-      result STRING (`Res = ""`) before operaion, set bit 1 in the
-      modus parameter (`Mo OR= &b10`)
+\note The received data get appended to result variable `Res`. In order
+      to reset the result STRING (`Res = ""`) before operaion, set bit
+      1 in the modus parameter (`Mo OR= &b10`).
 
-\since 0.0
+\since 0.0.0
 '/
 FUNCTION httpLoad(BYREF Res AS STRING, BYREF Adr AS STRING, BYVAL Mim AS MimeTypes = MIME_HTM OR MIME_TXT _
                 , BYVAL Port AS USHORT = 80, BYVAL Mo AS SHORT = &b10) AS ZSTRING PTR
   VAR     p = INSTR(Adr, "/") _
    , server = LEFT(Adr, p - 1) _
-     , path = urlEncode(MID(Adr, p)) _
    , client = NEW nettobacClient(server, Port) _ ' connect to web server at port (default 80)
         , r = client->Errr
   IF 0 = r THEN
-    VAR conn = client->OpenSock()                     ' get a connection
+    VAR conn = client->nOpen()                        ' get a connection
     WITH *client : DO
-      IF .Errr                                      THEN r = .Errr : EXIT DO ' no connection
+      IF .Errr                                         THEN r = .Errr : EXIT DO ' no connection
 
-      VAR req = HttpGetReq(server, path, MimeType(Mim))  ' build request
-      conn->PutData(SADD(req), LEN(req)) : IF .Errr THEN r = .Errr : EXIT DO ' put failed
+      VAR req = HttpGetReq(server, MID(Adr, p), Mim)     ' build request
+      conn->nPut(SADD(req), LEN(req)) : IF .Errr       THEN r = .Errr : EXIT DO ' put failed
 
       IF BIT(Mo, 1) THEN Res = ""             ' user wants to reset data
-      conn->GetData(Res) : IF .Errr                 THEN r = .Errr : EXIT DO ' get failed
+      conn->nGet(Res) : IF .Errr                       THEN r = .Errr : EXIT DO ' get failed
 
-      IF BIT(Mo, 0)     /' user wants all data, incl. header '/ THEN EXIT DO
+      IF BIT(Mo, 0)        /' user wants all data, incl. header '/ THEN EXIT DO
       p = INSTR(Res, HEADEREND)     ' search position of HTTP header end
       IF INSTRREV(Res, "200 OK", p) < 1 THEN r = @"http header check" : EXIT DO
       Res = MID(Res, p + 4) : LOOP UNTIL 1

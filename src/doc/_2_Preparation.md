@@ -2,21 +2,49 @@ Preparation  {#PagPreparation}
 ===========
 \tableofcontents
 
-This chapter is about
+The \Proj source code is ready to use, just copy from folder `src/bas`
+the files
 
-- how to prepare your system to use \Proj by installing tools,
-- how to get the package and
-- how to build the executable and the documentation.
+  - `nettobac.bi` header with declarations
+  - `nettobac_system.bi` header with system specific declarations
+  - `nettobac.bas` source file with function bodies
+
+in to your project source directory and prepend your code by
+
+~~~{.bas}
+#INCLUDE ONCE "nettobac.bas"
+~~~
+
+In order to see the code working, you can compile the examples directly
+in the folder `src/bas` by executing
+
+~~~{.sh}
+fbc -w all "example_client.bas"
+fbc -w all "example_server.bas"
+~~~
+
+and start the newly created binaries in that folder. See \ref
+SecExa_Client and \ref SecExa_Server for a detailed description of what
+should happen on your system.
 
 
 # Tools  {#SecTools}
 
-The following table lists all dependencies for \Proj and their types.
-At least, you have to install the FreeBASIC compiler on your system to
-build any executable using the \Proj features. Beside this mandatory
-(M) tool, the others are optional. Some are recommended (R) in order to
-make use of all package features. LINUX users find some packages in
-their distrubution management system (D).
+The further files in this package are related to the version control
+system GIT and to automatical builds of the examples and the
+documentation by the cross-platform CMake build management system. If
+you want to use all package features, you can find in this chapter
+
+- how to prepare your system by installing tools,
+- how to get the package and
+- how to automatical build the examples and the documentation.
+
+The following table lists all dependencies for the \Proj package and
+their types. At least, you have to install the FreeBASIC compiler on
+your system to build any executable using the \Proj features. Beside
+this mandatory (M) tool, the others are optional. Some are recommended
+(R) in order to make use of all package features. LINUX users find some
+packages in their distrubution management system (D).
 
 |                                        Name  | Type |  Function                                                      |
 | -------------------------------------------: | :--: | :------------------------------------------------------------- |
@@ -25,8 +53,9 @@ their distrubution management system (D).
 | [CMake](http://www.cmake.org)                | R  D | build management system to build executables and documentation |
 | [cmakefbc](http://github.com/DTJF/cmakefbc)  | R    | FreeBASIC extension for CMake                                  |
 | [fb-doc](http://github.com/DTJF/fb-doc)      | R    | FreeBASIC extension tool for Doxygen                           |
-| [Doxygen](http://www.doxygen.org/)           | R  D | documentation generator (ie. for this text)                    |
+| [Doxygen](http://www.doxygen.org/)           | R  D | documentation generator (for html output)                      |
 | [Graphviz](http://www.graphviz.org/)         | R  D | Graph Visualization Software (caller/callee graphs)            |
+| [LaTeX](https://latex-project.org/ftp.html)  | R  D | A document preparation system (for PDF output)                 |
 
 It's beyond the scope of this guide to describe the installation for
 those programming tools. Find detailed installation instructions on the
@@ -39,7 +68,7 @@ related websides, linked by the name in the first column.
    FreeBASIC](http://www.freebasic.net/wiki/wikka.php?wakka=CompilerInstalling)
    wiki page.
 
--# Continue by installing cmakefbc, if wanted. That's easy, when you
+-# Continue by installing cmakefbc (if wanted). That's easy, when you
    have GIT and CMake. Execute the commands
    ~~~{.sh}
    git clone https://github.com/DTJF/cmakefbc
@@ -69,7 +98,11 @@ related websides, linked by the name in the first column.
 # Get Package  {#SecGet}
 
 Depending on whether you installed the optional GIT package, there're
-two ways to get the \Proj package.
+two ways to get the \Proj package. After download, find the \Proj
+source files in folder `src/bas`. The code is ready to get used in your
+projects, just #`INCLUDE` file `nettobac.bas` (and also
+`nettobac_http.bas` if you want to use the utilities for http
+protocol).
 
 ## GIT  {#SecGet_Git}
 
@@ -89,18 +122,18 @@ As an alternative you can download a Zip archive by clicking the
 button on the \Proj website, and use your local Zip software to unpack
 the archive. Then change to the newly created folder.
 
+\note Zip files always contain the latest development version. You
+      cannot switch to a certain point in the history.
+
 
 # Build the examples  {#SecExecutable}
 
-Find the \Proj source files in folder `src/bas`. The code is ready to
-get used in your project, just #`INCLUDE` file `nettobac.bas` (and also
-`nettobac_http.bas` if you want to utilities for http protocol).
+The best way to get familar with the \Proj features is to check the
+examples source code and to compile and run them, in order to see the
+code working. This can be done either
 
-Check the source code in the examples to get inspirations. Or compile
-the examples to see the code working, either by
-
-- using the CMake build scripts, or
-- direct compiling by calling the FB compiler in the src folder.
+- by using the CMake build scripts, or
+- by direct compiling (calling the FB compiler in the src folder).
 
 
 ## CMake build  {#SecExe_CMakeBuild}
@@ -171,45 +204,3 @@ Both targets can get build separately by executing
 make doc_htm
 make doc_pdf
 ~~~
-
-
-## Direct compiling  {#SecExe_Man}
-
-### Executable  {#SecExe_Man_EXE}
-
-In order to build the executable change from the package root directory
-to the *src* folder and compile by executing
-
-~~~{.sh}
-cd src
-fbc -e -w all girtobac.bas
-~~~
-
-This creates an executable binary named
-
-- *girtobac* (on UNIX-like systems) or
-- *girtobac.exe* (on other systems).
-
-that you can install wherever you need it.
-
-### Documentation  {#SecExe_Man_DOC}
-
-In order to build the documentation, install the tools fb-doc, Doxygen
-and Graphviz. Then change from the package root directory to the `doxy`
-folder, up-date the file *fb-doc.lfn*, execute the Doxygen generator
-and adapt correct listings by executing
-
-~~~{.sh}
-cd doxy
-fb-doc -l
-doxygen Doxyfile
-fb-doc -s
-~~~
-
-to build the documentation in subfolders *html* (start file =
-index.html) and *latex* (call `make` in that folder to build
-refman.pdf).
-
-\note Adapt the configuration file *Doxyfile* (or your customized copy)
-      in order to fit the output to your needs.
-

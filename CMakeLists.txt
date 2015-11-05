@@ -15,7 +15,7 @@ LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 # constants
 SET(PROJ_NAME "nettobac"           CACHE STRING "project name" FORCE)
-SET(PROJ_DESC "Basic network features for FreeBASIC code" CACHE STRING "project description" FORCE)
+SET(PROJ_DESC "Network features for FreeBASIC code" CACHE STRING "project description" FORCE)
 SET(PROJ_VERS "0.0.0"              CACHE STRING "project version" FORCE)
 SET(PROJ_AUTH "DTJF"               CACHE STRING "project authors" FORCE)
 SET(PROJ_MAIL "Thomas{ doT ]Freiherr[ At ]gmx[ DoT }net"  CACHE STRING "project mail address" FORCE)

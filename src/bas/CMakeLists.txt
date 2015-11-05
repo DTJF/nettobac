@@ -3,7 +3,9 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
-CONFIGURE_FILE(nettobac_text.bi.in ${CMAKE_CURRENT_SOURCE_DIR}/nettobac_text.bi @ONLY)
+CONFIGURE_FILE(nettobac_system.bi.in ${CMAKE_CURRENT_SOURCE_DIR}/nettobac_system.bi @ONLY)
+CONFIGURE_FILE(data/demo1.html ${CMAKE_CURRENT_BINARY_DIR}/data/demo1.html COPYONLY)
+CONFIGURE_FILE(data/demo2.html ${CMAKE_CURRENT_BINARY_DIR}/data/demo2.html COPYONLY)
 
 SET(fb_tar
   "example_client"

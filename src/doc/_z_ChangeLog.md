@@ -8,7 +8,10 @@ Changelog & Credits  {#PagChangelog}
 \Proj is already a powerful tool to handle internet connection in FB
 source code. But there's still some optimization potential, like:
 
-- ???
+- more stuff in nettobac_http.bas, ie. https protocol
+
+- further utility files like ie. nettobac_ftp.bas,  nettobac_smtp.bas, ...
+
 - ...
 
 Feel free to post your ideas, bug reports, wishes or patches, either
@@ -25,7 +28,7 @@ or feel free to send your ideas directly to the author (\Mail).
 
 # Versions  {#SecVersions}
 
-## GirToBac-0.0  {#SubSecV-0-0}
+## nettobac-0.0.0  {#SubSecV-0-0-0}
 
 Initial release on 2015 November, ??.
 
@@ -34,29 +37,30 @@ Initial release on 2015 November, ??.
 
 There's a similar solution called
 [SNC](http://www.freebasic.net/forum/viewtopic.php?p=206316#p206316).
-Here're the differences between both packages (effective Oct. 2015):
+Here're the differences between both packages (vs. \Proj-0.0.0, SNC has
+no version number yet, effective Nov. 2015):
 
-- \Proj uses a syntax similar to the FB keywords (`Open`, `Put`, `Get`, `Close`)
-
-- the source is separated in *.bi and *.bas files (for usage in build management systems)
-
-- the source is fully documented in Doxygen style
+- \Proj uses a syntax similar to the FB keywords (`nOpen`, `nPut`, `nGet`, `nClose`)
 
 - the source is reduced to the essentials
 
-  - GetErrr functions removed, error message is a public ZSTRING PTR now (zero in case of no error)
-  - `CanPut` and `CanGet` functions removed, features integrated in `Get` and `Put` methods
-  - `Get` returns a STRING now, syntax similar to FB `GET #...` statement
-  - method `GetConnection` renamed by `Open`
+  - GetErrr functions removed, instead n2bFactory.Errr indicates an error and contains the message (zero in case of no error)
+  - `CanPut` and `CanGet` functions removed, features integrated in `nGet` and `nPut` methods, parameter `ReTry` defends against endless loops
+  - `nGet` returns a STRING now, syntax similar to FB `GET #...` statement
+  - method `GetConnection` renamed by `nOpen`
 
 - additional features
 
-  - `n2bFactory` collects a list of opened connections,
-     automaticaly closing them in the destructor
+  - the instances collect a list of opened connections, automaticaly closing them in the destructor
+  - new method `nClose` for manual closing a connection
 
-  - new method `Close` for manual closing a connection
+- instead of one file `snc.bi` there're `nettobac.bi` and `nettobac.bas` (for usage in build management systems)
 
-- additional `example_server.bas` and demo[12].htlm files
+- `snc_utilities.bas` renamed to `nettobac_http.bas`, new function httpLoad(), mime type handled as bit mask
+
+- additional `example_server.bas` and `demo[12].html` files
+
+- the source is fully documented in Doxygen style
 
 
 # Credits  {#SecCredits}
@@ -67,7 +71,13 @@ Thanks go to:
 
 - mf0102 for developing Allegro Simplificator.
 
+- D.J.Peters for his FB transformation.
+
 - Dimitri van Heesch for creating the Doxygen tool, which is used to
   generate this documentation.
+
+- Bill Hoffman, Ken Martin, Brad King, Dave Cole, Alexander Neundorf,
+  Clinton Stimpson for developing the CMake tool and publishing it
+  under an open licence (the documentation has optimization potential).
 
 - All others I forgot to mention.

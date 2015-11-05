@@ -1,9 +1,9 @@
 /'* \file example_client.bas
-\brief Example code to test `bn` package
+\brief Example code to test \Proj package in a server scenario
 
 Copyright (C) GPLv3, see ReadMe.md for details.
 
-\since 0.0
+\since 0.0.0
 '/
 
 #INCLUDE ONCE "nettobac.bas"
@@ -27,7 +27,7 @@ output (overriding an existend file, if any) and writes the STRING
 `Dat` in to it. The SUB gets called in order to store the downloaded
 data on disk.
 
-\since 0.0
+\since 0.0.0
 '/
 SUB saveData(BYREF Dat AS STRING, BYREF Nam AS STRING)
   VAR fnr = FREEFILE
@@ -41,45 +41,56 @@ SUB saveData(BYREF Dat AS STRING, BYREF Nam AS STRING)
 END SUB
 
 
+/'* \brief Operate as a client, download files
+\returns the value to `END` the program
+
+FIXME
+
+\since 0.0.0
+'/
+FUNCTION doClientActions() AS INTEGER
+  SCOPE
+    VAR res = "" _
+     , page = "users.freebasic-portal.de/tjf/Projekte/libpruio/doc/html/index.html" _
+      , msg = httpLoad(res, page, , , &b1)
+    IF msg THEN ?ERR_MSG : RETURN 1 _
+           ELSE saveData(res, "index.htm")
+  END SCOPE
+
+  SCOPE
+    VAR res = "" _
+     , page = "freebasic.net/sites/default/files/horse_original_r_0.gif" _
+      , msg = httpLoad(res, page, MIME_GIF)
+    IF msg THEN ?ERR_MSG : RETURN 1 _
+           ELSE saveData(res, "fb_logo.gif")
+  END SCOPE
+
+  SCOPE
+    VAR res = "" _
+     , page = "staticmap.openstreetmap.de/staticmap.php" _
+            & "?center=40.714728,-73.998672" _
+            & "&zoom=12" _
+            & "&size=320x248" _
+            & "&maptype=osmarenderer" _
+      , msg = httpLoad(res, page, MIME_PNG, , &b1) ' note: raw data incl. header
+    IF msg THEN
+      ?ERR_MSG : RETURN 1
+    ELSE
+      VAR p = INSTR(res, CHR(137, 80, 78, 71)) ' get start of PNG data
+      IF p THEN saveData(MID(Res, p), "osm.png") _
+           ELSE ?"PNG data not found"
+    END IF
+  END SCOPE
+  RETURN 0
+END FUNCTION
+
 '& int main(){
 
-?VERSION_TEXT
+?MSG_ALL
 
 IF CHDIR(FOLD) THEN MKDIR(FOLD) : IF CHDIR(FOLD) THEN ?"no write permission (press any key)" : SLEEP : END
 
-SCOPE
-  VAR res = "" _
-   , page = "users.freebasic-portal.de/tjf/Projekte/libpruio/doc/html/index.html" _
-    , msg = httpLoad(res, page, , , &b1)
-    ', msg = httpLoad(res, page, , , &b1)
-  IF msg THEN ?ERR_MSG _
-         ELSE saveData(res, "index.htm")
-END SCOPE
+END doClientActions()
 
-'SCOPE
-  'VAR res = "" _
-   ', page = "freebasic.net/sites/default/files/horse_original_r_0.gif" _
-    ', msg = httpLoad(res, page, MIME_GIF)
-  'IF msg THEN ?ERR_MSG _
-         'ELSE saveData(res, "fb_logo.gif")
-'END SCOPE
-
-'SCOPE
-  'VAR res = "" _
-   ', page = "staticmap.openstreetmap.de/staticmap.php" _
-          '& "?center=40.714728,-73.998672" _
-          '& "&zoom=12" _
-          '& "&size=320x248" _
-          '& "&maptype=osmarenderer" _
-    ', msg = httpLoad(res, page, MIME_PNG, , &b1) ' note: raw data incl. header
-  'IF msg THEN
-    '?ERR_MSG
-  'ELSE
-    'VAR p = INSTR(res, CHR(137, 80, 78, 71)) ' get start of PNG data
-    'IF p THEN saveData(MID(Res, p), "osm.png") _
-         'ELSE ?"PNG data not found"
-  'END IF
-'END SCOPE
-
-'& };
+'& doClientActions();};
 

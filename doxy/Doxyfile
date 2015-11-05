@@ -230,7 +230,8 @@ TAB_SIZE               = 2
 # "Side Effects:". You can put \n's in the value part of an alias to insert
 # newlines.
 
-ALIASES                =
+ALIASES                = "FB=[FreeBASIC](http://www.freebasic.net)" \
+                         "Item{1}=- `\"\1\"`: "
 
 # This tag can be used to specify a number of word-keyword mappings (TCL only).
 # A mapping has the form "name=value". For example adding "class=itcl::class"
@@ -753,7 +754,8 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../src \
+INPUT                  = ../src/bas \
+                         ../src/doc \
                          ../ReadMe.md
 
 # This tag can be used to specify the character encoding of the source files

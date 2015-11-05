@@ -1,55 +1,40 @@
 /'* \file nettobac.bi
+\brief Delarations for the \Proj classes
 
-`snc` is a synonym for [S]imple [N]etwork [C]onnection. This file
-contains classes designed to handle network client and server
-connections.
+This file contains the declarations for the classes, designed to handle
+network client and server connections.
 
-Copyright (C) LGPLv2, see bn.md for details.
+Copyright (C) LGPLv2.1, see ReadMe.md for details.
 
-\since 0.0
+\since 0.0.0
 '/
 
-#include once "nettobac_text.bi"
-
-#IFDEF __FB_WIN32__
- #INCLUDE "windows.bi"
- #INCLUDE "win/windef.bi"
- #INCLUDE "win/winsock2.bi"
- #IFNDEF opensocket
-  #DEFINE opensocket socket
- #ENDIF
-#ELSE
- #INCLUDE "crt/unistd.bi"     ' close_ ...
- #INCLUDE "crt/netinet/in.bi" ' socket.bi ...
- #INCLUDE "crt/sys/select.bi" ' FD_SET ...
- #INCLUDE "crt/netdb.bi"      ' hostent ...
- #INCLUDE "crt/arpa/inet.bi"  ' inet_ntoa ...
-#ENDIF
-
-#IFNDEF TCP_NODELAY ' "tcp.bi" does not exist, ...
- #DEFINE TCP_NODELAY &h01 ' so add the missing symbol
-#ENDIF
+#INCLUDE ONCE "nettobac_system.bi"
 
 
-/'* \brief FIXME
+/'* \brief The connections class, providing `nPut` / `nGet`
 
-It has to be constructed with a nettobacServer or a nettobacClient class. Data can
-get send or received to/from the peer with it.
+Do not create this class directly. It has to be constructed with a
+nettobacServer::nOpen() or a nettobacClient::nOpen() call. Data can get
+send or received to/from the peer with it.
 
+See section \ref SecErr_Connection for a list of possible error messages.
+
+\since 0.0.0
 '/
 TYPE n2bConnection
 PUBLIC:
   DECLARE CONSTRUCTOR(BYVAL AS LONG, BYVAL AS ZSTRING PTR PTR)
   DECLARE DESTRUCTOR()
-  DECLARE FUNCTION PutData OVERLOAD(BYVAL AS STRING, BYVAL AS INTEGER = 100) AS INTEGER
-  DECLARE FUNCTION PutData(BYVAL AS ANY PTR, BYVAL AS INTEGER, BYVAL AS INTEGER = 100) AS INTEGER
-  DECLARE FUNCTION GetData(BYREF AS STRING, BYVAL AS INTEGER = 100) AS ZSTRING PTR
+  DECLARE FUNCTION nPut OVERLOAD(BYVAL AS STRING, BYVAL AS USHORT = 100) AS INTEGER
+  DECLARE FUNCTION nPut(BYVAL AS ANY PTR, BYVAL AS INTEGER, BYVAL AS USHORT = 100) AS INTEGER
+  DECLARE FUNCTION nGet(BYREF AS STRING, BYVAL AS USHORT = 100) AS CONST ZSTRING CONST PTR
   AS ZSTRING PTR PTR Errr
 PROTECTED:
   AS LONG _
-      Sock '*< The socket number
+      Sock   '*< The socket number
   AS fd_set _
-      FdsR _ '*< file descriptor for red
+      FdsR _ '*< file descriptor for read
     , FdsW   '*< file descriptor for write
   AS timeval _
     Timeout  '*< how long should we wait until network is ready
@@ -57,63 +42,75 @@ END TYPE
 
 
 '
-/'* \brief Construct n2bConnection pointers
+/'* \brief Utility class to handle n2bConnection pointers, providing `nClose`
 
-This class manages the connection data. It provides the method to open
-connections and collects their pointer in the array Slots.
+The base class of the \Proj instances. It manages the connection
+instances and provides the methods to open connections, to collects
+their pointers in the array n2bFactory::Slots and to close a connection
+manualy. The destructor closes all remaining connections.
 
-\since 0.0
+See section \ref SecErr_Factory for a list of possible error messages.
+
+\since 0.0.0
 '/
 TYPE n2bFactory EXTENDS OBJECT
 PUBLIC:
   AS ZSTRING PTR Errr '*< the common error message (`NULL` in case of no error)
+  /'* \brief the array to store open connections
+
+    In case of a server instance use this array to scan over all open
+    connections. See function #doServer() for an example.
+
+  '/
+  AS n2bConnection PTR Slots(ANY)
   DECLARE CONSTRUCTOR()
   DECLARE VIRTUAL DESTRUCTOR()
-  DECLARE ABSTRACT FUNCTION OpenSock() AS n2bConnection PTR
-  DECLARE FUNCTION CloseSock(BYVAL AS n2bConnection ptr) AS zstring ptr
-  REDIM AS n2bConnection PTR Slots(-1 TO -1)
+  DECLARE ABSTRACT FUNCTION nOpen() AS n2bConnection PTR
+  DECLARE FUNCTION nClose(BYVAL AS n2bConnection PTR) AS CONST ZSTRING CONST PTR
 PROTECTED:
-  AS LONG Sock '*< socket to listen at (server only)
+  AS LONG Sock '*< the socket to use
   DECLARE FUNCTION slot(BYVAL AS LONG) AS n2bConnection PTR
 END TYPE
 
 
-/'* \brief The client class
+/'* \brief The client class, providing `nOpen`
 
-Class creating an instance to act as a client. This is
+This class extends #n2bFactory. It's an instance to act as a client.
+This is
 
 - connecting to a server
 - sending data requests
 - receiving returned data
 
-\since 0.0
+See section \ref SecErr_Client for a list of possible error messages.
+
+\since 0.0.0
 '/
 TYPE nettobacClient EXTENDS n2bFactory
 PUBLIC:
-  '* \brief create a client instance to a server, default port is 80
   DECLARE CONSTRUCTOR(BYREF AS STRING, BYVAL AS USHORT = 80)
-  '* \brief open a client connection to a server
-  DECLARE VIRTUAL FUNCTION OpenSock() AS n2bConnection PTR
+  DECLARE VIRTUAL FUNCTION nOpen() AS n2bConnection PTR
 END TYPE
 
 
-/'* \brief The server class
+/'* \brief The server class, providing `nOpen`
 
-Class creating an instance to act as a server. This is
+This class extends #n2bFactory. It's an instance to act as a server.
+This is
 
 - listening to a port
 - accepting client connection requests
 - receiving data requests
 - sending data
 
-\since 0.0
+See section \ref SecErr_Server for a list of possible error messages.
+
+\since 0.0.0
 '/
 TYPE nettobacServer EXTENDS n2bFactory
 PUBLIC:
-  '* \brief create a server instance (defaults: port is 80, maximum 64 client connections)
   DECLARE CONSTRUCTOR(BYVAL AS USHORT = 80, BYVAL AS INTEGER = 64)
-  '* \brief open the server connection to a connecting client
-  DECLARE VIRTUAL FUNCTION OpenSock() AS n2bConnection PTR
+  DECLARE VIRTUAL FUNCTION nOpen() AS n2bConnection PTR
 PRIVATE:
   AS timeval Timeout  '*< the timeout value to abort slow or impossible transmissions
 END TYPE
