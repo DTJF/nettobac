@@ -1,7 +1,6 @@
 $ cat .gitignore
 
 # Can ignore specific files
-ReadMe.md
 Makefile
 info.txt
 cmake_install.cmake
