@@ -22,7 +22,9 @@ DIM SHARED AS STRING _
 \param Con the connection in use
 \returns 0 (zero) to continue the server main loop, any other value to exit
 
-FIXME
+This is a callback function that gets called by function doServer() in
+case of a new client connection request. It just outputs a message
+at the console window.
 
 \since 0.0.0
 '/
@@ -37,7 +39,9 @@ END FUNCTION
 \param Con the connection in use
 \returns 0 (zero) to continue the server main loop, any other value to exit
 
-FIXME
+This is a callback function that gets called by function doServer() in
+case of a client peer closed the connection. It just outputs a message
+at the console window.
 
 \since 0.0.0
 '/
@@ -52,11 +56,16 @@ END FUNCTION
 \param Dat the message from the client
 \returns 0 (zero) to continue the server main loop, any other value to exit
 
-FIXME
+This is a callback function that gets called by function doServer() in
+case of a data request from a connected client peer. It analyses the
+request (message in `Dat`) and sends an appropriate response (via hppt
+protocol). Some responses are pre-defined (read from files), others get
+generated depending on the client message.
 
 \since 0.0.0
 '/
 FUNCTION newData(BYVAL Con AS n2bConnection PTR, BYREF Dat AS STRING) AS INTEGER
+'&typedef n2bConnection* n2bConnection_PTR;
   ?!"Client message:\n" & dat
   SELECT CASE LEFT(Dat, 4)
   CASE "GET "
@@ -76,7 +85,8 @@ FUNCTION newData(BYVAL Con AS n2bConnection PTR, BYREF Dat AS STRING) AS INTEGER
     ELSEIF MID(Dat, 5, 9) = "/FORM?id=" THEN
       VAR p = INSTR(   Dat, "&password=") _
         , q = INSTR(p, Dat, "&button=") _
-        , t = "<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">" _
+        , t = "<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" " _
+            & """http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">" _
             & "<html><body>" _
             & "<b>Login data</b>" _
             & "<p>ID = " & urlDecode(MID(Dat, 14, p - 14)) _
@@ -117,20 +127,32 @@ END FUNCTION
 /'* \brief Operate as a server
 \returns the value to `END` the program
 
-FIXME
+This function creates a nettobacServer instance and check in a loop for
+new connection requests and for requests from already connected client
+peers. In case of events is call callback functions
+
+\Item{newConn} when a new client requests a connection
+
+\Item{newData} when a connected client requests data
+
+\Item{disConn} when a connection gets closed
+
+The loop continues when the function returns 0 (zero). Ohterwise all
+connections get closed and the nettobacServer instance gets `DELETE`d.
+Also any keystroke breaks the main loop.
 
 \since 0.0.0
 '/
-FUNCTION doServer() AS INTEGER
-  VAR server = NEW nettobacServer(3490) ' create web server instance for port 3490
+FUNCTION doServer(BYVAL Port AS USHORT = 3490) AS INTEGER
+  VAR server = NEW nettobacServer(Port) ' create server instance for Port
   WITH *server
-    IF .Errr THEN             ?"error: " & *.Errr & " failed" : RETURN 1
-    ?"server started"
+    IF .Errr             THEN ?"error: " & *.Errr & " failed" : RETURN 1
+    ?"server started (port = " & Port & ")"
     WHILE 0 = LEN(INKEY())
-      VAR con = .nOpen()
+      VAR con = .nOpen() '&nettobacServer.nOpen();
       IF .Errr THEN
         SELECT CASE *.Errr
-        CASE "server isset"                          ' drop this message
+        CASE "server isset"                          ' drop this message (it means no connection request pending)
         CASE ELSE : ?"error: " & *.Errr & " failed"         ' show other
         END SELECT : .Errr = 0                     ' reset error message
       ELSE
@@ -138,18 +160,18 @@ FUNCTION doServer() AS INTEGER
       END IF
 
       FOR i AS INTEGER = UBOUND(.Slots) TO 0 STEP -1
-        VAR dat = ""
-        .Slots(i)->nGet(dat, 0)    ' check for new message (single shot)
+        VAR dat = "", con = .Slots(i) '&n2bConnection* con;
+        con->nGet(dat, 0)                  ' check for new message (single shot)
         IF .Errr THEN                                        ' got error
           SELECT CASE *.Errr                    ' no data, just an error
-          CASE "retry"   ' drop message (it means nothing has been sent)
-          CASE "disconnected"                         ' close connection
-            IF disConn(server, .Slots(i))                THEN EXIT WHILE
-            .nClose(.Slots(i))
+          CASE "retry"                               ' drop this message (it means no data pending)
+          CASE "disconnected"                       ' peer disconnection
+            IF disConn(server, con)                      THEN EXIT WHILE
+            .nClose(con)                              ' close connection
           CASE ELSE : ?"error: " & *.Errr & " failed"       ' show other
           END SELECT : .Errr = 0                   ' reset error message
         END IF
-        IF LEN(dat) ANDALSO newData(.Slots(i), dat)      THEN EXIT WHILE
+        IF LEN(dat) ANDALSO newData(con, dat)            THEN EXIT WHILE
       NEXT : SLEEP 10
     WEND
   END WITH
@@ -199,6 +221,6 @@ ELSE
   CLOSE #fnr
 END IF
 
-END doServer()
+END doServer(3490)
 
 '& doServer();};

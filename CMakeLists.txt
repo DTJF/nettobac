@@ -11,7 +11,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
 # add search path if cmakefbc isn't installed
-LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+#LIST(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 # constants
 SET(PROJ_NAME "nettobac"           CACHE STRING "project name" FORCE)
@@ -25,6 +25,9 @@ SET(PROJ_YEAR "2015"               CACHE STRING "project year" FORCE)
 
 # declare the project name and the language (compiler) to use
 PROJECT(${PROJ_NAME} Fbc)
+IF(CMAKE_Fbc_COMPILER_ID LESS "1.0")
+  MESSAGE(FATAL_ERROR "FreeBASIC version is ${CMAKE_Fbc_COMPILER_ID}, at least 1.0 is required!")
+ENDIF()
 
 ADD_SUBDIRECTORY(src/bas)
 

@@ -35,8 +35,8 @@ system GIT and to automatical builds of the examples and the
 documentation by the cross-platform CMake build management system. If
 you want to use all package features, you can find in this chapter
 
-- how to prepare your system by installing tools,
-- how to get the package and
+- how to prepare your system by installing necessary tools,
+- how to get the package using GIT and
 - how to automatical build the examples and the documentation.
 
 The following table lists all dependencies for the \Proj package and
@@ -98,11 +98,7 @@ related websides, linked by the name in the first column.
 # Get Package  {#SecGet}
 
 Depending on whether you installed the optional GIT package, there're
-two ways to get the \Proj package. After download, find the \Proj
-source files in folder `src/bas`. The code is ready to get used in your
-projects, just #`INCLUDE` file `nettobac.bas` (and also
-`nettobac_http.bas` if you want to use the utilities for http
-protocol).
+two ways to get the \Proj package.
 
 ## GIT  {#SecGet_Git}
 
@@ -126,77 +122,124 @@ the archive. Then change to the newly created folder.
       cannot switch to a certain point in the history.
 
 
-# Build the examples  {#SecExecutable}
+# CMake Builds  {#Sec_CMakeBuilds}
 
-The best way to get familar with the \Proj features is to check the
-examples source code and to compile and run them, in order to see the
-code working. This can be done either
+The CMake build scripts are prepared to
 
-- by using the CMake build scripts, or
-- by direct compiling (calling the FB compiler in the src folder).
+- compile executables off examples example_client.bas and example_server.bas
+- compile the documentation in several output formats (html, tex, pdf).
+
+This can get done
+
+- either in-source (the output and all auxiliary files get generated
+  inside the source tree)
+
+- or out-of-source (all new files get created in a separate build
+  folder, multiple build folders can hold different configurations, ie.
+  different targets)
+
+The later is the prefered way, since it doesn't polute the source tree
+and is more flexible.
+
+\note In order to build the documentation, all recommended packages
+      listed in section \ref SecTools have to get installed.
 
 
-## CMake build  {#SecExe_CMakeBuild}
+## In-Source-Build  {#SecExe_CMake_ISB}
 
-The prefered way to build executables of the examples and the
-documentation files is to use the scripts for the CMake build system.
-If you don't want to install or to use CMake, then skip this section
-and continue at \ref SecExe_Man.
-
-The CMake scripts check your system and through warnings if anything is
-missing. Otherwise you can either perform an in-source or an
-out-of-source build. The later should be your prefered choise.
-
-
-### In-Source-Build  {#SecExe_CMake_ISB}
-
-The following command double will compile the examples in the source
-tree and install it on your system:
+In order to perform a in-source build go to the root folder of the
+package and execute the following command:
 
 ~~~{.sh}
 cmake .
-make
 ~~~
 
-\note In-Source-Builds polute the source tree by newly created files.
+This will check your system and on success it creates a set of
+`Makefile`s and `CMake...` files to handle the build process. Those
+files get generated in the source tree.
 
+### Examples  {#SecExe_InExa}
 
-### Out-Of-Source-Build  {#SecExe_CMake_OSB}
-
-The following command qaudtuple will create a new *build* folder,
-change to that folder and compile the examples:
+The following command will compile the examples:
 
 ~~~{.sh}
-mkdir build
-cd build
-cmake ..
 make
 ~~~
 
-Now you can start the executables by
+It executes the files created by the priviuos `cmake .` command and
+build the binaries in folder `src/bas`. You can now run the examples by
+executing
 
 ~~~{.sh}
 src/bas/example_client
 src/bas/example_server
 ~~~
 
-See \ref SecExa_Client and \ref SecExa_Server for a detailed
-desrciption of what should happen.
+### Documentation  {#SecExe_InDoc}
 
-
-### Documentation-Build  {#SecExe_CMake_DOC}
-
-In order to build the documentation, all recommended packages listed in
-section \ref SecTools have to get installed. The following command will
-build the documentation in form of an HTML file tree and in form of a
-PDF file (either in-source or out-of-source):
+The following command will compile the documentation in html, tex and
+pdf format:
 
 ~~~{.sh}
 make doc
 ~~~
 
-\note Find the HTML start file at `doc/html/index.html`.
-\note Find the PDF file at `doc/girtobac.pdf`.
+\note Find the HTML start file at `doxy/html/index.html`.
+\note Find the PDF file at `doxy/nettobac.pdf`.
+
+Both targets can get build separately by executing
+
+~~~{.sh}
+make doc_htm
+make doc_pdf
+~~~
+
+
+## Out-Of-Source-Build  {#SecExe_CMake_OSB}
+
+In order to perform a out-of-source build go to the root folder of the
+package and execute the following command triple:
+
+~~~{.sh}
+mkdir build
+cd build
+cmake ..
+~~~
+
+This will create a new folder `build`, change to that directory and in
+the third step check your system. On success it creates a set of
+`Makefile`s and `CMake...` files to handle the build process inside the
+build folder. Those files are separated the source tree.
+
+
+### Examples  {#SecExe_OutExa}
+
+In order to compile the examples execute in the `build` folder
+
+~~~{.sh}
+make
+~~~
+
+This executes the files created by the priviuos `cmake ..` command and
+build the binaries in subfolder `src/bas`. You can now run the examples
+by executing
+
+~~~{.sh}
+build/src/bas/example_client
+build/src/bas/example_server
+~~~
+
+### Documentation  {#SecExe_OutDoc}
+
+The following command executed in the `build` folder will compile the
+documentation in html, tex and pdf format:
+
+~~~{.sh}
+make doc
+~~~
+
+\note Find the HTML start file at `build/doxy/html/index.html`.
+\note Find the PDF file at `build/doxy/nettobac.pdf`.
 
 Both targets can get build separately by executing
 

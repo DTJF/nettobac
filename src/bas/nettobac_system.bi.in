@@ -10,6 +10,10 @@ Copyright (C) LGPLv2.1, see ReadMe.md for details.
 \since 0.0.0
 '/
 
+#IF __FB_VERSION__ < "1.0"
+ #ERROR  Fatal error: please compile WITH FreeBASIC version 1.0 OR above
+#ENDIF
+
 #IFDEF __FB_UNIX__
  #INCLUDE "crt/unistd.bi"
  #INCLUDE "crt/netinet/in.bi"

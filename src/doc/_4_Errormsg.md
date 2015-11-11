@@ -25,13 +25,13 @@ See macro #ERR_MSG and its usage for an advanced example.
 
 \note \Proj does not reset this variable. You have to do it in your
       code when you intend to continue after an error occured.
-      (Otherwise your next error check will trough a false positive.)
+      (Otherwise your next error check may trough a false positive.)
 
-Furthermore, when the issue comes from a function call in libc, you can
+Furthermore, when the issue comes from a libc function call, you can
 gain [detailed information from its
 errno](http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/errno.h.html).
 
-The following sections list all manner of .Errr strings reported by \Proj.
+The following sections list all manner of `.Errr` strings reported by \Proj.
 
 
 # nettobacClient  {#SecErr_Client}

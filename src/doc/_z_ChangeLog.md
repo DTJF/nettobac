@@ -10,7 +10,7 @@ source code. But there's still some optimization potential, like:
 
 - more stuff in nettobac_http.bas, ie. https protocol
 
-- further utility files like ie. nettobac_ftp.bas,  nettobac_smtp.bas, ...
+- further utility files like ie. nettobac_ftp.bas, nettobac_smtp.bas, ...
 
 - ...
 
@@ -21,7 +21,7 @@ to the project page at
 
 or to the
 
-- [forum page](http://www.freebasic.net/forum/viewtopic.php?p=???)
+- [forum page](http://www.freebasic.net/forum/viewtopic.php?f=8&t=24133#p213232)
 
 or feel free to send your ideas directly to the author (\Mail).
 
@@ -30,10 +30,10 @@ or feel free to send your ideas directly to the author (\Mail).
 
 ## nettobac-0.0.0  {#SubSecV-0-0-0}
 
-Initial release on 2015 November, ??.
+Initial release on 2015 November, 11.
 
 
-# Proj vs. SNC
+# \Proj vs. SNC
 
 There's a similar solution called
 [SNC](http://www.freebasic.net/forum/viewtopic.php?p=206316#p206316).

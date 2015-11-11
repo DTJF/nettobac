@@ -203,12 +203,13 @@ END FUNCTION
 This function loads a file over a network connection. It tries to
 
 - create a nettobacClient instance to the server adress
-- create a connetion
+- open a n2bConnetion
 - request the target file
 - receive the http reponse
 - check the http header
   - if header OK, strip header and return data only
   - if not OK, return all data unchanged
+- delete the nettobacClient instance (and close the n2bConnetion)
 
 An error check gets done after each step. In case of an error the
 function breaks and the error text gets returned. Otherwise the return
@@ -230,7 +231,8 @@ value 0 (zero) indicates successful operation.
 \since 0.0.0
 '/
 FUNCTION httpLoad(BYREF Res AS STRING, BYREF Adr AS STRING, BYVAL Mim AS MimeTypes = MIME_HTM OR MIME_TXT _
-                , BYVAL Port AS USHORT = 80, BYVAL Mo AS SHORT = &b10) AS ZSTRING PTR
+                , BYVAL Port AS USHORT = 80, BYVAL Mo AS SHORT = &b10) AS CONST ZSTRING CONST PTR
+'&nettobacClient* client; n2bConnection* conn;
   VAR     p = INSTR(Adr, "/") _
    , server = LEFT(Adr, p - 1) _
    , client = NEW nettobacClient(server, Port) _ ' connect to web server at port (default 80)

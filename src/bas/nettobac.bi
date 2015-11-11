@@ -76,8 +76,7 @@ END TYPE
 
 /'* \brief The client class, providing `nOpen`
 
-This class extends #n2bFactory. It's an instance to act as a client.
-This is
+This class is an instance to act as a client. This is
 
 - connecting to a server
 - sending data requests
@@ -96,8 +95,7 @@ END TYPE
 
 /'* \brief The server class, providing `nOpen`
 
-This class extends #n2bFactory. It's an instance to act as a server.
-This is
+This class is an instance to act as a server. This is
 
 - listening to a port
 - accepting client connection requests

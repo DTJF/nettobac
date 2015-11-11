@@ -52,7 +52,7 @@ FUNCTION doClientActions() AS INTEGER
   SCOPE
     VAR res = "" _
      , page = "users.freebasic-portal.de/tjf/Projekte/libpruio/doc/html/index.html" _
-      , msg = httpLoad(res, page, , , &b1)
+      , msg = httpLoad(res, page)
     IF msg THEN ?ERR_MSG : RETURN 1 _
            ELSE saveData(res, "index.htm")
   END SCOPE
@@ -88,6 +88,7 @@ END FUNCTION
 
 ?MSG_ALL
 
+CHDIR(EXEPATH())
 IF CHDIR(FOLD) THEN MKDIR(FOLD) : IF CHDIR(FOLD) THEN ?"no write permission (press any key)" : SLEEP : END
 
 END doClientActions()

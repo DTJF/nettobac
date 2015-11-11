@@ -1,9 +1,9 @@
 Welcome to project *@PROJ_NAME@*, a [FreeBASIC
 (FB)](http://www.freebasic.net) extension to handle network
 connections. It is implemented in OOP (object orientated programming)
-as a class to get included in users source code at module level. It
-provides features to handle network transfer similar to FB file access
-like
+as classes, designed to get included in users source code at module
+level. It provides features to handle network transfer similar to FB
+file access like
 
 - `OPEN` and `CLOSE` network connections
 - `PUT` (= send) or `GET` (= receive) data thereover
