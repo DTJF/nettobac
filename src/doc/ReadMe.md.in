@@ -8,7 +8,8 @@ file access like
 - `OPEN` and `CLOSE` network connections
 - `PUT` (= send) or `GET` (= receive) data thereover
 
-The package is [hosted at GitHub](@PROJ_WEBS@) and it contains
+The package has no further dependencies (it's based on libc), it's
+[hosted at GitHub](@PROJ_WEBS@) and it contains
 
 - the source code in folder *src/bas*
   - the *@PROJ_NAME@* classes

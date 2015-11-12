@@ -18,8 +18,7 @@ source code is
 #INCLUDE ONCE "nettobac_http.bas"
 
 VAR res = "" _
- , page = "www.freebasic.net/index.html" _
-  , msg = httpLoad(res, page)
+  , msg = httpLoad(res, "www.freebasic.net/index.html")
 IF msg THEN ?"error: " & *msg & " failed" : END 1
 
 ' here variable res contains the web page context
