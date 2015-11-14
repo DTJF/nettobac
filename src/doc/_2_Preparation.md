@@ -34,6 +34,7 @@ The further files in this package are related to the version control
 system GIT and to automatical builds of the examples and the
 documentation by the cross-platform CMake build management system. If
 you want to use all package features, you can find in this chapter
+information on
 
 - how to prepare your system by installing necessary tools,
 - how to get the package using GIT and

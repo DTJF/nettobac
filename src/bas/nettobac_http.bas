@@ -14,23 +14,23 @@ Copyright (C) LGPLv2.1, see ReadMe.md for details.
 '/
 
 CONST AS STRING _
-    LINEEND   = !"\r\n" _   '*< the line end characters
-  , HEADEREND = !"\r\n\r\n" '*< the end of header characters
+    LINEEND   = !"\r\n" _   '*< The line end characters
+  , HEADEREND = !"\r\n\r\n" '*< The end of header characters
 
 ENUM MimeTypes
-  MIME_HTM = &b0000000000000 '*< mime type "text/html"
-  MIME_TXT = &b0000000000010 '*< mime type "text/plain"
-  MIME_BMP = &b0000000000100 '*< mime type "image/bmp"
-  MIME_GIF = &b0000000001000 '*< mime type "image/gif"
-  MIME_JPG = &b0000000010000 '*< mime type "image/jpeg"
-  MIME_PNG = &b0000000100000 '*< mime type "image/png"
-  MIME_TIF = &b0000001000000 '*< mime type "image/tiff"
-  MIME_WAV = &b0000010000000 '*< mime type "audio/wav"
-  MIME_MP3 = &b0000100000000 '*< mime type "audio/mpeg"
-  MIME_OGG = &b0001000000000 '*< mime type "audio/ogg"
-  MIME_PDF = &b0010000000000 '*< mime type "application/pdf"
-  MIME_ZIP = &b0100000000000 '*< mime type "application/x-compressed"
-  MIME_GZ  = &b1000000000000 '*< mime type "application/gzip"
+  MIME_HTM = &b0000000000000 '*< Mime type "text/html"
+  MIME_TXT = &b0000000000010 '*< Mime type "text/plain"
+  MIME_BMP = &b0000000000100 '*< Mime type "image/bmp"
+  MIME_GIF = &b0000000001000 '*< Mime type "image/gif"
+  MIME_JPG = &b0000000010000 '*< Mime type "image/jpeg"
+  MIME_PNG = &b0000000100000 '*< Mime type "image/png"
+  MIME_TIF = &b0000001000000 '*< Mime type "image/tiff"
+  MIME_WAV = &b0000010000000 '*< Mime type "audio/wav"
+  MIME_MP3 = &b0000100000000 '*< Mime type "audio/mpeg"
+  MIME_OGG = &b0001000000000 '*< Mime type "audio/ogg"
+  MIME_PDF = &b0010000000000 '*< Mime type "application/pdf"
+  MIME_ZIP = &b0100000000000 '*< Mime type "application/x-compressed"
+  MIME_GZ  = &b1000000000000 '*< Mime type "application/gzip"
 END ENUM
 
 
@@ -192,7 +192,7 @@ FUNCTION httpPutReq(BYREF Host AS STRING, BYREF Targ AS STRING, BYREF Content AS
 END FUNCTION
 
 
-/'* \brief load a file over network via http protocol
+/'* \brief Load a file over network via http protocol
 \param Res a STRING variable to append the result
 \param Adr the address of the target (ie. `freebasic.net/index.html`)
 \param Mim the mime type (see enumerators #MimeTypes)

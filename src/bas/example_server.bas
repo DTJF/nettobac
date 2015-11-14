@@ -10,11 +10,11 @@ Copyright (C) GPLv3, see ReadMe.md for details.
 #INCLUDE ONCE "nettobac_http.bas"
 
 DIM SHARED AS STRING _
-    HTML1 _ '*< the startpage, loaded from local data folder
-  , HTML2 _ '*< the second page, loaded from local data folder
-  , ICON _  '*< an icon, loded over web
-  , HTTP _  '*< the HTTP header
-  , EMSG    '*< the HTTP error message
+    HTML1 _ '*< The startpage, loaded from local data folder
+  , HTML2 _ '*< The second page, loaded from local data folder
+  , ICON _  '*< An icon, loded over web
+  , HTTP _  '*< The HTTP header
+  , EMSG    '*< The HTTP error message
 
 
 /'* \brief Callback function to handle a new connection

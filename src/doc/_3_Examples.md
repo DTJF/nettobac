@@ -33,7 +33,7 @@ In case of success the function returns 0 (zero) and the downloaded
 context is in variable `res`.
 
 A little more complex code is used in the package examples, described
-in the folloing sections.
+in the following sections.
 
 
 # example_client  {#SecExa_Client}
@@ -162,11 +162,11 @@ When the second link gets clicked, no further message gets shown in the
 command line window, since the browser connects to an external server
 to get the context.
 
-When you click on the first (internal) link, further message occur in
-the command line window. The second page opens. It contains a form with
-two entries for a pseudo login and a button. When clicking the button,
-the server gets the form context and extracts the user input from the
-entries, to create a new page showing the results.
+When you click on the first (internal) link, further messages occur in
+the command line window (as shown above). The second page opens. It
+contains a form with two entries for a pseudo login and a button. When
+clicking the button, the server gets the form context and extracts the
+user input from the entries, to create a new page showing the results.
 
 When the button `Exit demo -> shutdown server` gets clicked, the server
 closes all connections and shuts down. This can also get achieved by

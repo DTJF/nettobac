@@ -34,10 +34,10 @@ PROTECTED:
   AS LONG _
       Sock   '*< The socket number
   AS fd_set _
-      FdsR _ '*< file descriptor for read
-    , FdsW   '*< file descriptor for write
+      FdsR _ '*< File descriptor for read
+    , FdsW   '*< File descriptor for write
   AS timeval _
-    Timeout  '*< how long should we wait until network is ready
+    Timeout  '*< How long should we wait until network is ready
 END TYPE
 '& typedef n2bConnection* n2bConnection_PTR;
 
@@ -56,8 +56,8 @@ See section \ref SecErr_Factory for a list of possible error messages.
 '/
 TYPE n2bFactory EXTENDS OBJECT
 PUBLIC:
-  AS ZSTRING PTR Errr '*< the common error message (`NULL` in case of no error)
-  /'* \brief the array to store open connections
+  AS ZSTRING PTR Errr '*< The common error message (`NULL` in case of no error)
+  /'* \brief The array to store open connections
 
     In case of a server instance use this array to scan over all open
     connections. See function #doServer() for an example.
@@ -69,7 +69,7 @@ PUBLIC:
   DECLARE ABSTRACT FUNCTION nOpen() AS n2bConnection PTR
   DECLARE FUNCTION nClose(BYVAL AS n2bConnection PTR) AS CONST ZSTRING CONST PTR
 PROTECTED:
-  AS LONG Sock '*< the socket to use
+  AS LONG Sock '*< The socket to use
   DECLARE FUNCTION slot(BYVAL AS LONG) AS n2bConnection PTR
 END TYPE
 
@@ -110,6 +110,6 @@ TYPE nettobacServer EXTENDS n2bFactory
 PUBLIC:
   DECLARE CONSTRUCTOR(BYVAL AS USHORT = 80, BYVAL AS INTEGER = 64)
   DECLARE VIRTUAL FUNCTION nOpen() AS n2bConnection PTR
-PRIVATE:
-  AS timeval Timeout  '*< the timeout value to abort slow or impossible transmissions
+PROTECTED:
+  AS timeval Timeout  '*< The timeout value to abort slow or impossible transmissions
 END TYPE
