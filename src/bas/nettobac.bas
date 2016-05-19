@@ -270,6 +270,11 @@ listening on the specified port.
 '/
 CONSTRUCTOR nettobacServer(BYVAL Port AS USHORT = 80, BYVAL Max AS INTEGER = 64)
   BASE() : IF Sock = SOCKET_ERROR                  THEN EXIT CONSTRUCTOR
+
+  DIM AS LONG yes = 1
+  IF SOCKET_ERROR = setsockopt(Sock, SOL_SOCKET, SO_REUSEADDR, @yes, SIZEOF(LONG)) _
+    THEN Errr = @"setsockopt"
+
   DIM AS sockaddr_in sadr
   sadr.sin_family = AF_INET
   sadr.sin_port = htons(port)
