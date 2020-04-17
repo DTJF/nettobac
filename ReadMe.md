@@ -35,7 +35,7 @@ filtering.
 License
 =======
 
-Copyright (C) 2015-2015, Thomas{ doT ]Freiherr[ At ]gmx[ DoT }net
+Copyright (C) 2015-2020, Thomas{ doT ]Freiherr[ At ]gmx[ DoT }net
 
 This *nettobac* code is free software; you can redistribute it
 and/or modify it under the terms of the Lesser GNU General Public
